@@ -1,0 +1,6 @@
+body {
+    transition: 1s;
+}
+#md-editor-v3 {
+    height: 100%;
+}
