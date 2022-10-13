@@ -30,6 +30,12 @@ export const userStore = defineStore('main', {
         //     console.log(this.countA)
         //     return this.countA += 1
         // },
+        changeScreenWidth(screenWidth: number) {
+            this.screenWidth = screenWidth
+            // userMainHeadBackgroundImage
+            // 690
+            // 1070
+        },
         changeThemeNaive(theme: string) {
             this.themeMD = theme
             // console.log(theme)

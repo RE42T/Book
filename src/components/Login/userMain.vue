@@ -7,11 +7,11 @@
         </div>
         <!-- <n-divider /> -->
         <div class="main">
-            <n-card style="margin-bottom: 16px">
-                <n-tabs type="line" animated>
-                <n-tab-pane name="oasis" tab="我的笔记">
-                    <n-list>
-                        <n-scrollbar style="max-height: 482px">
+            <n-card id="userMainCard">
+                <n-tabs id="userMainTabs" type="line" animated>
+                <n-tab-pane class="userMainTab" name="oasis" tab="我的笔记">
+                    <n-list class="listShell">
+                        <n-scrollbar>
                             <n-list-item v-for="(item,index) in noteList" :key="index">
                                 <ul class="list clearfix">
                                     <li>{{item}}</li>
@@ -86,19 +86,34 @@ import { EllipsisVertical } from '@vicons/ionicons5'
 // import { storeToRefs } from 'pinia'
 const { proxy } = getCurrentInstance() as any
 const store = proxy.$userStore();
+window.onresize = () => {
+    return (() => {
+        store.changeScreenWidth(document.body.clientWidth)
+    })()
+}
 let themeStyle = () => {
+    const screenWidth = store.screenWidth
+    const urls = {
+        darkSB: "url('img/userMainBG-S-B.jpg')",
+        darkSW: "url('img/userMainBG-S-W.jpg')",
+        darkMB: "url('img/userMainBG-M-B.JPG')",
+        darkMW: "url('img/userMainBG-M-W.JPG')",
+        darkBB: "url('img/userMainBG-L-B.jpg')",
+        darkBW: "url('img/userMainBG-L-W.jpg')",
+    }
     const dark = {
-        backgroundImage: "url('img/userMainBG-B.jpg')",
+        backgroundImage: screenWidth < 690 ? urls.darkSB : screenWidth < 1070 ? urls.darkMB : urls.darkBB,
         boxShadow: "inset 0px 0px 90px 1px rgba(0, 0, 0, 1)",
     }
     const light = {
-        backgroundImage: "url('img/userMainBG-W.jpg')",
+        backgroundImage: screenWidth < 690 ? urls.darkSW : screenWidth < 1070 ? urls.darkMW : urls.darkBW,
         boxShadow: "inset 0px 0px 90px 1px rgb(255, 255, 255)",
     }
     const themes = {
         dark,
         light
     }
+    // themes[store.themeMD].backgroundImage = "url('img/userMainBG1.JPG')"
     return themes[store.themeMD]
 }
 let message = proxy.$message;
@@ -110,6 +125,8 @@ let noteList = ref (['fff','fff','fff','fff','fff','fff','fff','fff','fff','fff'
 @import '@/assets/scss/_var.module.scss';
 #userMain {
     width: 100%;
+    height: 100%;
+    overflow: hidden;
     .head{
         padding: 40px;
         height: 200px;
@@ -134,20 +151,34 @@ let noteList = ref (['fff','fff','fff','fff','fff','fff','fff','fff','fff','fff'
         }
     }
     .main {
-        .list {
-            line-height: 28px;
-            li {
-                list-style: none;
-                width: 30%;
-                float: left;
-            }
-            .operation {
-                font-size: 10px;
-                text-align: right;
-                width: calc(10% - 10px);
-                padding-right: 10px;
+        height: calc(100% - 280px);
+        #userMainCard {
+            height: 100%;
+            #userMainTabs {
+                height: 100%;
+                .userMainTab {
+                    height: 100%;
+                    .listShell {
+                        height: 100%;
+                        .list {
+                            line-height: 28px;
+                            li {
+                                list-style: none;
+                                width: 30%;
+                                float: left;
+                            }
+                            .operation {
+                                font-size: 10px;
+                                text-align: right;
+                                width: calc(10% - 10px);
+                                padding-right: 10px;
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 }
+// 1070
 </style>

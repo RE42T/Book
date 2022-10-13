@@ -4,3 +4,10 @@ body {
 #md-editor-v3 {
     height: 100%;
 }
+.n-tabs-pane-wrapper {
+    height: calc(100% - 50px);
+    padding-bottom: 25px;
+}
+.n-card__content {
+    height: 100%;
+}
