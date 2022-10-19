@@ -1,7 +1,7 @@
 <template>
     <div id="userMain">
         <div class="head" :style="themeStyle()">
-            <img class="headPortrait" src="img/headPortrait.jpg" alt="">
+            <img @click="editHeadPortrait" class="headPortrait" src="img/headPortrait.jpg" alt="">
             <h3 class="userName">君大大人</h3>
             <p class="remark">明日方舟真好玩ヾ(◍°∇°◍)ﾉﾞ！！！</p>
         </div>
@@ -69,6 +69,9 @@
                 </n-tabs>
             </n-card>
         </div>
+        <div class="Tool">
+            <HeadPortrait></HeadPortrait>
+        </div>
     </div>
 </template>
 
@@ -81,6 +84,7 @@ import {
     FormRules
 } from 'naive-ui'
 import { EllipsisVertical } from '@vicons/ionicons5'
+import HeadPortrait from './Tool/headPortrait.vue'
 // import varScss from '@/assets/scss/_var.module.scss'
 // console.log(varScss.userMainTop_BGI_URL)
 // import { storeToRefs } from 'pinia'
@@ -117,6 +121,9 @@ let themeStyle = () => {
     return themes[store.themeMD]
 }
 let message = proxy.$message;
+const editHeadPortrait = () => {
+    
+}
 let tags = ref(['教师', '程序员'])
 let noteList = ref (['fff','fff','fff','fff','fff','fff','fff','fff','fff','fff','fff'])
 </script>
@@ -141,6 +148,7 @@ let noteList = ref (['fff','fff','fff','fff','fff','fff','fff','fff','fff','fff'
         .headPortrait {
             width: 100px;
             height: 100px;
+            cursor: pointer;
         }
         .userName {
             font-size: 24px;

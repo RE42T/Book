@@ -2,12 +2,14 @@
     <div>
         <topMenuVue />
         <leftMenuVue />
+        <HeadPortrait></HeadPortrait>
     </div>
 </template>
 
 <script setup lang="ts">
 import topMenuVue from './topMenu.vue';
 import leftMenuVue from './leftMenu.vue';
+import HeadPortrait from '../Tool/headPortrait.vue';
 import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
 import { defineComponent, h, ref, Component, getCurrentInstance } from 'vue'
 // import { storeToRefs } from 'pinia'

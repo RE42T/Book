@@ -39,7 +39,7 @@ const routes = [
             },
             {
                 path: 'userMain',
-                component:()=>import("./components/Login/userMain.vue"),
+                component:()=>import("./components/userMain.vue"),
             },
         ]
     },
