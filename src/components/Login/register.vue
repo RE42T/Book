@@ -82,7 +82,7 @@ function handleValidateButtonClick(e: MouseEvent) {
             message.success('验证成功')
             loginCookies();
         } else {
-            // console.log(errors)
+            console.log(errors)
             message.error('验证失败')
         }
     })

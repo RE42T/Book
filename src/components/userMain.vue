@@ -70,7 +70,7 @@
             </n-card>
         </div>
         <div class="Tool">
-            <HeadPortrait></HeadPortrait>
+            <HeadPortrait ref="headPortrait"></HeadPortrait>
         </div>
     </div>
 </template>
@@ -86,15 +86,19 @@ import {
 import { EllipsisVertical } from '@vicons/ionicons5'
 import HeadPortrait from './Tool/headPortrait.vue'
 // import varScss from '@/assets/scss/_var.module.scss'
-// console.log(varScss.userMainTop_BGI_URL)
 // import { storeToRefs } from 'pinia'
 const { proxy } = getCurrentInstance() as any
 const store = proxy.$userStore();
+// 设置初始窗口宽度到 vuex
+store.changeScreenWidth(document.body.clientWidth)
+// 检测窗口宽度变化
 window.onresize = () => {
     return (() => {
+        // 把当前窗口宽度传递到 vuex 内
         store.changeScreenWidth(document.body.clientWidth)
     })()
 }
+// 切换主题所更改的样式
 let themeStyle = () => {
     const screenWidth = store.screenWidth
     const urls = {
@@ -121,8 +125,9 @@ let themeStyle = () => {
     return themes[store.themeMD]
 }
 let message = proxy.$message;
+let headPortrait = ref()
 const editHeadPortrait = () => {
-    
+    headPortrait.value.showModalFun();
 }
 let tags = ref(['教师', '程序员'])
 let noteList = ref (['fff','fff','fff','fff','fff','fff','fff','fff','fff','fff','fff'])

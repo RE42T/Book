@@ -20,7 +20,7 @@ const dtate = reactive({
     // list: []
 })
 onMounted(async () => {
-    console.log('初始化')
+    console.log('mdEditor初始化')
 })
 </script>
 
