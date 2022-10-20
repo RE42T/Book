@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <link rel="icon" href="/favicon.ico" />
     <link rel="stylesheet" href="./css/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite App</title>
-  </head>
-  <body>
+</head>
+
+<body>
     <div id="app"></div>
-    
-<script id="fragmentShaderPosition" type="x-shader/x-fragment">
+
+    <script id="fragmentShaderPosition" type="x-shader/x-fragment">
 
   uniform float time;
   uniform float delta;
@@ -33,10 +35,10 @@
   }
   
   </script>
-  
-  <!-- shader for bird's velocity -->
-  <script id="fragmentShaderVelocity" type="x-shader/x-fragment">
-  
+
+    <!-- shader for bird's velocity -->
+    <script id="fragmentShaderVelocity" type="x-shader/x-fragment">
+
       uniform float time;
       uniform float testing;
       uniform float delta; // about 0.016
@@ -194,9 +196,9 @@
       }
   
   </script>
-  
-  <script type="x-shader/x-vertex" id="birdVS">
-  
+
+    <script type="x-shader/x-vertex" id="birdVS">
+
       attribute vec2 reference;
       attribute float birdVertex;
   
@@ -260,10 +262,10 @@
       }
   
   </script>
-  
-  <!-- bird geometry shader -->
-  <script type="x-shader/x-fragment" id="birdFS">
-  
+
+    <!-- bird geometry shader -->
+    <script type="x-shader/x-fragment" id="birdFS">
+
       varying vec4 vColor;
       varying float z;
   
@@ -277,12 +279,12 @@
       }
   
   </script>
-  
-  <!-- Import maps polyfill -->
-  <!-- Remove this when import maps will be widely supported -->
-  <script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
-  
-  <!-- <script type="importmap">
+
+    <!-- Import maps polyfill -->
+    <!-- Remove this when import maps will be widely supported -->
+    <script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+
+    <!-- <script type="importmap">
       {
           "imports": {
               "three": "../build/three.module.js"
@@ -290,5 +292,6 @@
       }
   </script> -->
     <script type="module" src="/src/main.ts"></script>
-  </body>
+</body>
+
 </html>

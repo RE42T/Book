@@ -1,6 +1,6 @@
 <template>
     <div id="userMain">
-        <div class="head" :style="themeStyle()">
+        <div class="head" ref="userMainHead" :style="themeStyle()">
             <img @click="editHeadPortrait" class="headPortrait" src="img/headPortrait.jpg" alt="">
             <h3 class="userName">君大大人</h3>
             <p class="remark">明日方舟真好玩ヾ(◍°∇°◍)ﾉﾞ！！！</p>
@@ -89,13 +89,20 @@ import HeadPortrait from './Tool/headPortrait.vue'
 // import { storeToRefs } from 'pinia'
 const { proxy } = getCurrentInstance() as any
 const store = proxy.$userStore();
-// 设置初始窗口宽度到 vuex
-store.changeScreenWidth(document.body.clientWidth)
-// 检测窗口宽度变化
+let userMainHead = ref()
+
+onMounted(async () => {
+
+    // 设置初始 div.head 窗口宽度到 vuex
+    store.changeScreenWidth(userMainHead.value.clientWidth)
+})
+
+// 检测 div.head 窗口宽度变化
 window.onresize = () => {
     return (() => {
-        // 把当前窗口宽度传递到 vuex 内
-        store.changeScreenWidth(document.body.clientWidth)
+        console.log(userMainHead.value.clientWidth)
+        // 把当前 div.head 窗口宽度传递到 vuex 内
+        store.changeScreenWidth(userMainHead.value.clientWidth)
     })()
 }
 // 切换主题所更改的样式
@@ -110,11 +117,11 @@ let themeStyle = () => {
         darkBW: "url('img/userMainBG-L-W.jpg')",
     }
     const dark = {
-        backgroundImage: screenWidth < 690 ? urls.darkSB : screenWidth < 1070 ? urls.darkMB : urls.darkBB,
+        backgroundImage: screenWidth < 630 ? urls.darkSB : screenWidth < 1000 ? urls.darkMB : urls.darkBB,
         boxShadow: "inset 0px 0px 90px 1px rgba(0, 0, 0, 1)",
     }
     const light = {
-        backgroundImage: screenWidth < 690 ? urls.darkSW : screenWidth < 1070 ? urls.darkMW : urls.darkBW,
+        backgroundImage: screenWidth < 630 ? urls.darkSW : screenWidth < 1000 ? urls.darkMW : urls.darkBW,
         boxShadow: "inset 0px 0px 90px 1px rgb(255, 255, 255)",
     }
     const themes = {

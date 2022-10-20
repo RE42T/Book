@@ -8,23 +8,23 @@ const store = proxy.$userStore();
 </script>
 
 <template>
-  <n-config-provider :locale="zhCN" :theme="store.themeNaive">
-    <!-- <NavVue /> -->
-    <n-message-provider>
-      <MessageApi></MessageApi>
-    </n-message-provider>
-    <router-view></router-view>
-  </n-config-provider>
+    <n-config-provider :locale="zhCN" :theme="store.themeNaive">
+        <!-- <NavVue /> -->
+        <n-message-provider>
+            <MessageApi></MessageApi>
+        </n-message-provider>
+        <router-view></router-view>
+    </n-config-provider>
 </template>
 
 <style lang="scss">
 body {
-  background-color: rgb(8 9 14);
+    background-color: rgb(8 9 14);
 
-  .clearfix::after {
-    content: '';
-    clear: both;
-    display: block;
-  }
+    .clearfix::after {
+        content: '';
+        clear: both;
+        display: block;
+    }
 }
 </style>
