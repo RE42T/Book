@@ -4,7 +4,7 @@ import { createPinia } from 'pinia';
 import naive from 'naive-ui';
 import router from './router';
 import { userStore } from './Store';
-import VueCookies from 'vue-cookies';
+import VueCookies from 'vue3-cookies';
 
 // 通用字体
 import 'vfonts/Lato.css'

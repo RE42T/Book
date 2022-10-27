@@ -1,7 +1,8 @@
 <template>
     <div id="editHeadPortrait">
         <n-modal v-model:show="showModal" class="custom-card" preset="card" :style="bodyStyle"
-            :title="showCropper ? '更换头像' : '头像'" size="huge" :bordered="false" :segmented="segmented">
+            :title="showCropper ? '更换头像' : '头像'" size="huge" :bordered="false" :segmented="segmented"
+            :on-after-leave="cancelESC">
             <template #header-extra>
             </template>
             <div id="vueCropper" v-show="showCropper">
@@ -18,7 +19,12 @@
                 <!-- <img :src="headPortraitUrl" alt=""> -->
                 <n-image-group show-toolbar-tooltip>
                     <!-- <n-space> -->
-                    <n-image :width="300" :src="headPortraitUrl" />
+                    <n-popover trigger="hover">
+                        <template #trigger>
+                            <n-image :width="300" :src="headPortraitUrl" />
+                        </template>
+                        <span style="cursor: pointer;" @click="showCropperClick">更换头像</span>
+                    </n-popover>
                     <!-- </n-space> -->
                 </n-image-group>
             </div>
@@ -44,6 +50,7 @@
     import { VueCropper } from 'vue-cropper';
     import 'vue-cropper/dist/index.css'
     import { text } from 'stream/consumers';
+    import img from '../../../public/img/headPortrait.jpg'
 
     // 引入全局
     const { proxy } = getCurrentInstance() as any
@@ -73,19 +80,22 @@
     // 展示头像模块显示/隐藏变量
     let showHeadPortrait = ref(true)
 
+    // let img = require('@/public/img/headPortrait.jpg')
+    console.log(img)
+
     // 展示头像地址
     let headPortraitUrl = ref('img/headPortrait.jpg')
 
     // VueCropper 配置项
     const option = ref({//裁剪參數
-        img: '',
+        img: headPortraitUrl,
         outputSize: 1,
         info: false, // 裁剪框的大小信息
         outputType: 'jpg', // 裁剪生成图片的格式
         canScale: true, // 图片是否允许滚轮缩放
         autoCrop: true, // 是否默认生成截图框
-        autoCropWidth: '200px', // 默认生成截图框宽度
-        autoCropHeight: '200px', // 默认生成截图框高度
+        autoCropWidth: 200, // 默认生成截图框宽度
+        autoCropHeight: 200, // 默认生成截图框高度
         high: true, // 是否按照设备的dpr 输出等比例图片
         fixedBox: false, // 固定截图框大小 不允许改变
         fixed: true, // 是否开启截图框宽高固定比例
@@ -94,15 +104,22 @@
         canMove: true, // 上传图片是否可以移动
         canMoveBox: true, // 截图框能否拖动
         original: false, // 上传图片按照原始比例渲染
-        centerBox: true, // 截图框是否被限制在图片里面
+        centerBox: false, // 截图框是否被限制在图片里面
         infoTrue: false, // true 为展示真实输出图片宽高 false 展示看到的截图框宽高
-        mode: '100% auto' // 图片默认渲染方式
+        mode: 'contain' // 图片默认渲染方式
     })
 
     const showCropper = ref(false)
     const fileList = ref([])
     const cropper = ref()//截取的dom元素
     const file = ref()
+
+    // 切换为头像修改模式
+    const showCropperClick = () => {
+        showHeadPortrait.value = false
+        showCropper.value = true
+    }
+
     /**
      * 選取圖片後
      * @param file
@@ -145,6 +162,12 @@
     // 取消更换头像事件
     const cancelClick = () => {
         showModal.value = false
+    }
+
+    // 关闭拟态框的回调事件，还原初始状态
+    const cancelESC = () => {
+        showHeadPortrait.value = true
+        showCropper.value = false
     }
 
     // 暴露子组件的方法

@@ -100,7 +100,7 @@ onMounted(async () => {
 // 检测 div.head 窗口宽度变化
 window.onresize = () => {
     return (() => {
-        console.log(userMainHead.value.clientWidth)
+        // console.log(userMainHead.value.clientWidth)
         // 把当前 div.head 窗口宽度传递到 vuex 内
         store.changeScreenWidth(userMainHead.value.clientWidth)
     })()
