@@ -3,6 +3,7 @@ import state from './state'
 // import actions from './actions'
 import { defineStore } from 'pinia'
 import { darkTheme } from 'naive-ui'
+// import { getImageFileFromUrl } from '../lib/file'
 
 // useStore 可以是任何类似 useUser、useCart 的东西
 // 第一个参数是应用程序中存储的唯一 id
@@ -56,6 +57,6 @@ export const userStore = defineStore('main', {
             } else {
                 this.loadingOpacity = 0
             }
-        }
+        },
     },
 })

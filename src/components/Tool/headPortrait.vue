@@ -48,9 +48,8 @@
     } from 'naive-ui'
     import { EllipsisVertical } from '@vicons/ionicons5'
     import { VueCropper } from 'vue-cropper';
+    import { getImageFileFromUrl, testPromise } from '@/lib/file'
     import 'vue-cropper/dist/index.css'
-    import { text } from 'stream/consumers';
-    import img from '../../../public/img/headPortrait.jpg'
 
     // 引入全局
     const { proxy } = getCurrentInstance() as any
@@ -79,9 +78,6 @@
 
     // 展示头像模块显示/隐藏变量
     let showHeadPortrait = ref(true)
-
-    // let img = require('@/public/img/headPortrait.jpg')
-    console.log(img)
 
     // 展示头像地址
     let headPortraitUrl = ref('img/headPortrait.jpg')
@@ -172,6 +168,17 @@
 
     // 暴露子组件的方法
     defineExpose({ showModalFun });
+
+    // 试验区
+
+    testPromise()
+
+    // getImageFileFromUrl(headPortraitUrl.value).then(file => {
+    //     // console.log(file)
+    //     console.log(1)
+    // })
+
+    // 试验区
 
 </script>
 
