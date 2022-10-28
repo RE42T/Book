@@ -77,13 +77,20 @@ const fn = (s: any) => {
             // 这里由于继承了 fn("1") 的失败状态导致执行了 catch
             // 而 fn(1) 的状态为成功，所以没有执行 catch
             // 按照我的理解，这里的 undefined 是 fn(1) 第二轮执行的结果
-            ,
-            (err) => console.log("then2 err " + typeof err) // 这里输出"then2 err string"
+            // ,
+            // (err) => console.log("then2 err " + typeof err) // 这里输出"then2 err string"
         )
         .catch((err) => {
+            // 由于之前的 .then 都没有一个报错的出口，于是一直在传递失败状态，
+            // 直到这个 .catch 里面终于有了报错出口，然后便最后执行了
             console.log("参数是一个字符串");
-            console.log('catch' + err); // 这里输出"1"，因为上一个then又没失败回调，一直穿透下来
-        });
+            console.log("catch " + typeof err); // 这里输出"catch string"，因为上一个then又没失败回调，一直穿透下来
+        })
+        // .then(res => {
+        //     console.log(res)
+        // }).catch((err) => {
+        //     console.log("catch2 " + err); // 这里无输出，因为上一个then执行了失败回调，值没有穿透下来
+        // });
 };
 fn("1");
 fn(1);
@@ -96,6 +103,11 @@ fn(1);
 // 参数是一个number
 // then2 err string
 // then2 succ undefined
+
+// 参数是一个number
+// then2 succ undefined
+// 参数是一个字符串
+// catch string
 
 
 // 完整例子
@@ -266,7 +278,7 @@ class MyPromise {
     rejectedCallback = [];
 
     // 静态resolve
-    static resolve(value: any) {
+    static resolve(value?: any) {
         // 加入参数是一个promise，原封不动的返回
         if (value instanceof MyPromise) {
             return value;
@@ -277,7 +289,7 @@ class MyPromise {
     }
 
     // 静态reject
-    static reject(value: any) {
+    static reject(value?: any) {
         if (value instanceof MyPromise) {
             return value;
         }
@@ -367,5 +379,33 @@ class MyPromise {
         return p;
     }
 }
+// console.log("---------------------")
+// function testPromise() {
+// MyPromise.resolve()
+//   .then(() => {
+//     console.log(0);
+//     return MyPromise.resolve(4);
+//   })
+//   .then((res) => {
+//     console.log(res);
+//   });
+
+// MyPromise.resolve()
+//   .then(() => {
+//     console.log(1);
+//   })
+//   .then(() => {
+//     console.log(2);
+//   })
+//   .then(() => {
+//     console.log(3);
+//   })
+//   .then(() => {
+//     console.log(5);
+//   })
+//   .then(() => {
+//     console.log(6);
+//   });
+// }
 
 export { getImageFileFromUrl, testPromise }
