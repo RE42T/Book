@@ -44,23 +44,59 @@ function testPromise() {
     })
 }
 
-const fn = (s: any) => (
-    new Promise<void>((resolve, reject) => {
-        if (typeof s === 'number') {
-            resolve();
+// const fn = (s: any) => (
+//     new Promise((resolve: any, reject: any) => {
+//         if (typeof s === 'number') {
+//             resolve();
+//         } else {
+//             reject();
+//         }
+//     })
+//         .then(
+//             res => console.log('参数是一个number'),
+//         )
+//         .catch(err => console.log('参数是一个字符串'))
+// )
+// fn('1');
+// fn(1);
+// 先输出   参数是一个number
+// 后输出   参数是一个字符串
+const fn = (s: any) => {
+    new Promise((resolve, reject) => {
+        if (typeof s === "number") {
+            resolve(s);
         } else {
-            reject();
+            reject(s);
         }
     })
         .then(
-            res => console.log('参数是一个number'),
+            (res) => console.log("参数是一个number")) // 注意，这里虽然提供了函数，但是没返回，所以理解为  return resolve(undefined)
+        // 注意，这里没传递失败函数，只要callback不是一个函数，默认值穿透拿上一步的promise
+        .then(
+            (succ) => console.log("then2 succ " + succ) // 这里一定输出undefined，毕竟上一步没返回值，默认理解成resolve(undefined)
+            // 这里由于继承了 fn("1") 的失败状态导致执行了 catch
+            // 而 fn(1) 的状态为成功，所以没有执行 catch
+            // 按照我的理解，这里的 undefined 是 fn(1) 第二轮执行的结果
+            ,
+            (err) => console.log("then2 err " + typeof err) // 这里输出"then2 err string"
         )
-        .catch(err => console.log('参数是一个字符串'))
-)
-fn('1');
+        .catch((err) => {
+            console.log("参数是一个字符串");
+            console.log('catch' + err); // 这里输出"1"，因为上一个then又没失败回调，一直穿透下来
+        });
+};
+fn("1");
 fn(1);
-// 先输出   参数是一个number
-// 后输出   参数是一个字符串
+// 参数是一个number
+// undefined
+// 参数是一个字符串
+// "1"
+
+
+// 参数是一个number
+// then2 err string
+// then2 succ undefined
+
 
 // 完整例子
 // const PENDING = "pending";
@@ -274,7 +310,7 @@ class MyPromise {
         }
     }
 
-    then = (fulfilledFn: any, rejectedFn: any) => {
+    then = (fulfilledFn?: any, rejectedFn?: any) => {
         // 新增回调判断，如果没传递，那我们就定义一个单纯起value接力作用的函数
         fulfilledFn =
             typeof fulfilledFn === "function" ? fulfilledFn : (value: any) => value;
