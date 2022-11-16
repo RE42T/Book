@@ -20,9 +20,9 @@
         "three-js": "^79.0.0",
         "vfonts": "^0.0.3",
         "vue": "^3.2.25",
+        "vue-cookies": "^1.8.2",
         "vue-cropper": "^1.0.5",
-        "vue-router": "^4.0.14",
-        "vue3-cookies": "^1.0.6"
+        "vue-router": "^4.0.14"
     },
     "devDependencies": {
         "@vitejs/plugin-vue": "^2.3.0",

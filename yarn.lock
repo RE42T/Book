@@ -1014,6 +1014,11 @@ vooks@^0.2.12, vooks@^0.2.4:
   dependencies:
     evtd "^0.2.2"
 
+vue-cookies@^1.8.2:
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/vue-cookies/-/vue-cookies-1.8.2.tgz#39515fa09ebb585a50ac86c0e182a6b9307dc6ad"
+  integrity sha512-+NfoC5l+7ybuVwpnqsf52qndnoYMjEb4EFhX4/j9RzzQP00dNzuJELsWuW2p8omNUzNlSgWGVyyWoOeJr347tw==
+
 vue-cropper@^1.0.5:
   version "1.0.5"
   resolved "https://registry.npmjs.org/vue-cropper/-/vue-cropper-1.0.5.tgz"
@@ -1047,14 +1052,7 @@ vue-tsc@^1.0.8:
     "@volar/vue-language-core" "1.0.9"
     "@volar/vue-typescript" "1.0.9"
 
-vue3-cookies@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.npmjs.org/vue3-cookies/-/vue3-cookies-1.0.6.tgz"
-  integrity sha512-a1UvVD0qIgxyOqjlSOwnLnqAnz8ASltugEv8yX+96i/WGZAN9fEDci7xO4HIWZE1uToUnRq9JnFhvfDCSo45OA==
-  dependencies:
-    vue "^3.0.0"
-
-vue@^3.0.0, vue@^3.2.25:
+vue@^3.2.25:
   version "3.2.31"
   resolved "https://registry.npmjs.org/vue/-/vue-3.2.31.tgz"
   integrity sha512-odT3W2tcffTiQCy57nOT93INw1auq5lYLLYtWpPYQQYQOOdHiqFct9Xhna6GJ+pJQaF67yZABraH47oywkJgFw==
