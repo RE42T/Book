@@ -1,4 +1,5 @@
 <template>
+    <BackgroundVue></BackgroundVue>
     <div id="login">
         <n-space>
             <n-spin class="loading loginFixed" size="large"
@@ -11,7 +12,7 @@
         </n-space>
         <div class="loginForm">
             <n-icon size="60" class="logo">
-                <Leaf color="#fff" />
+                <Leaf color="#000" />
             </n-icon>
             <n-form ref="formRef" :model="modelRef" :rules="rules">
                 <n-form-item path="user" label="账号">
@@ -56,6 +57,7 @@ import {
     FormRules
 } from 'naive-ui'
 import { GameControllerOutline, Leaf } from '@vicons/ionicons5'
+import BackgroundVue from './background.vue';
 // import { storeToRefs } from 'pinia'
 const { proxy } = getCurrentInstance() as any
 const store = proxy.$userStore();
@@ -140,12 +142,17 @@ function loginCookies() {
     ToRouter('/')
 }
 function ToRouter(urlName: string) {
+    console.log(router)
     router.push(urlName)
 }
 </script>
 
 <style lang="scss" scoped>
 #login {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 10001;
     #verification {
         height: 30px;
         background-color: #eee;

@@ -11,7 +11,7 @@ var arr = document.cookie.match(new RegExp("(^| )" + name + "=([^;]*)(;|$)"));
         return null
     }
 }
-const routes = [
+const routes: any = [
     {
         path:"/",
         name:"home",

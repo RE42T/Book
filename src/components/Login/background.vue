@@ -1,7 +1,5 @@
 <template>
-    <div>
-
-    </div>
+    <div id="backgroundLogin"></div>
 </template>
 
 <script setup lang="ts">
@@ -20,6 +18,8 @@ import {
     DoubleSide,
     Mesh,
 } from 'three';
+
+import { onMounted } from 'vue'
 
 import Stats from '../../../public/js/stats.module.js';
 import { GUI } from '../../../public/js/lil-gui.module.min.js';
@@ -144,13 +144,16 @@ let positionUniforms: any;
 let velocityUniforms: any;
 let birdUniforms: any;
 
-init();
-animate();
+onMounted(async () => {
+    init();
+    animate();
+    console.log('backgroundLogin初始化')
+})
 
 function init() {
 
     container = document.createElement('div');
-    document.body.appendChild(container);
+    document.querySelector('#backgroundLogin').appendChild(container);
 
     camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 3000);
     camera.position.z = 350;
@@ -389,4 +392,11 @@ function render() {
 </script>
 
 <style lang="scss" scoped>
+    #backgroundLogin {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
 </style>

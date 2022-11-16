@@ -87,7 +87,7 @@ function logout() {
     height: 50px;
 
     #topMenuLeft {
-        width: 60%;
+        padding-right: 20px;
         margin-top: 5px;
 
         #search {
@@ -101,18 +101,16 @@ function logout() {
     }
 
     #topMenuMain {
-        width: 30%;
         line-height: 50px;
     }
 
     #topMenuRight {
-        width: 10%;
+        float: right;
         line-height: 50px;
     }
 
     #topMenuLeft,
-    #topMenuMain,
-    #topMenuRight {
+    #topMenuMain {
         float: left;
     }
 }
