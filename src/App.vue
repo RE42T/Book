@@ -5,6 +5,7 @@ import { zhCN, dateZhCN } from 'naive-ui'
 // import { storeToRefs } from 'pinia'
 const { proxy } = getCurrentInstance() as any
 const store = proxy.$userStore();
+document.body.style.backgroundColor = store.theme === 'dark' ? 'rgb(8 9 14)' : 'rgb(255 255 255)'
 </script>
 
 <template>
@@ -19,7 +20,7 @@ const store = proxy.$userStore();
 
 <style lang="scss">
 body {
-    background-color: rgb(8 9 14);
+    // background-color: rgb(8 9 14);
 
     .clearfix::after {
         content: '';

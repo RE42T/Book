@@ -1,6 +1,6 @@
 <template>
     <div id="editorMD">
-        <md-editor v-model="text" :theme="store.themeMD" />
+        <md-editor v-model="text" :theme="store.theme" />
     </div>
 </template>
 

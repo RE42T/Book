@@ -12,7 +12,7 @@
         </n-space>
         <div class="loginForm">
             <n-icon size="60" class="logo">
-                <Leaf color="#000" />
+                <Leaf :color="store.theme === 'dark' ? '#fff' : '#000'" />
             </n-icon>
             <n-form ref="formRef" :model="modelRef" :rules="rules">
                 <n-form-item path="user" label="账号">

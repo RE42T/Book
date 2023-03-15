@@ -20,8 +20,8 @@ export const userStore = defineStore('main', {
         //     console.log(state.countG)
         //     return state.countG += 1
         // },
-        // changeThemeMD(): string {
-        //     return this.themeMD
+        // changeTheme(): string {
+        //     return this.theme
         // },
         
     },
@@ -38,7 +38,7 @@ export const userStore = defineStore('main', {
             // 1070
         },
         changeThemeNaive(theme: string) {
-            this.themeMD = theme
+            this.theme = theme
             // console.log(theme)
             let dom: any = document.querySelector('body');
             if (theme == 'dark') {

@@ -1,30 +1,30 @@
 <template>
-    <div id="backgroundLogin"></div>
+  <div id="backgroundLogin"></div>
 </template>
 
 <script setup lang="ts">
 import {
-    BufferGeometry,
-    BufferAttribute,
-    Color,
-    PerspectiveCamera,
-    Scene,
-    Fog,
-    WebGLRenderer,
-    HalfFloatType,
-    Vector3,
-    RepeatWrapping,
-    ShaderMaterial,
-    DoubleSide,
-    Mesh,
-} from 'three';
+  BufferGeometry,
+  BufferAttribute,
+  Color,
+  PerspectiveCamera,
+  Scene,
+  Fog,
+  WebGLRenderer,
+  HalfFloatType,
+  Vector3,
+  RepeatWrapping,
+  ShaderMaterial,
+  DoubleSide,
+  Mesh,
+} from "three";
 
-import { onMounted } from 'vue'
+import { onMounted } from "vue";
 
-import Stats from '../../../public/js/stats.module.js';
-import { GUI } from '../../../public/js/lil-gui.module.min.js';
+import Stats from "../../../public/js/stats.module.js";
+import { GUI } from "../../../public/js/lil-gui.module.min.js";
 
-import { GPUComputationRenderer } from '../../../public/js/GPUComputationRenderer.js';
+import { GPUComputationRenderer } from "../../../public/js/GPUComputationRenderer.js";
 
 /* TEXTURE WIDTH FOR SIMULATION */
 const WIDTH = 32;
@@ -33,107 +33,91 @@ const BIRDS = WIDTH * WIDTH;
 
 // Custom Geometry - using 3 triangles each. No UVs, no normals currently.
 class BirdGeometry extends BufferGeometry {
+  constructor() {
+    super();
 
-    constructor() {
+    const trianglesPerBird = 3;
+    const triangles = BIRDS * trianglesPerBird;
+    const points = triangles * 3;
 
-        super();
+    const vertices = new BufferAttribute(new Float32Array(points * 3), 3);
+    const birdColors = new BufferAttribute(new Float32Array(points * 3), 3);
+    const references = new BufferAttribute(new Float32Array(points * 2), 2);
+    const birdVertex = new BufferAttribute(new Float32Array(points), 1);
 
-        const trianglesPerBird = 3;
-        const triangles = BIRDS * trianglesPerBird;
-        const points = triangles * 3;
+    this.setAttribute("position", vertices);
+    this.setAttribute("birdColor", birdColors);
+    this.setAttribute("reference", references);
+    this.setAttribute("birdVertex", birdVertex);
 
-        const vertices = new BufferAttribute(new Float32Array(points * 3), 3);
-        const birdColors = new BufferAttribute(new Float32Array(points * 3), 3);
-        const references = new BufferAttribute(new Float32Array(points * 2), 2);
-        const birdVertex = new BufferAttribute(new Float32Array(points), 1);
+    // this.setAttribute( 'normal', new Float32Array( points * 3 ), 3 );
 
-        this.setAttribute('position', vertices);
-        this.setAttribute('birdColor', birdColors);
-        this.setAttribute('reference', references);
-        this.setAttribute('birdVertex', birdVertex);
+    let v = 0;
 
-        // this.setAttribute( 'normal', new Float32Array( points * 3 ), 3 );
-
-
-        let v = 0;
-
-        function verts_push(a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, j: number) {
-
-            for (let i = 0; i < arguments.length; i++) {
-
-                vertices.array[v++] = arguments[i];
-
-            }
-
-        }
-
-        const wingsSpan = 20;
-
-        for (let f = 0; f < BIRDS; f++) {
-
-            // Body
-
-            verts_push(
-                0, - 0, - 20,
-                0, 4, - 20,
-                0, 0, 30
-            );
-
-            // Wings
-
-            verts_push(
-                0, 0, - 15,
-                - wingsSpan, 0, 0,
-                0, 0, 15
-            );
-
-            verts_push(
-                0, 0, 15,
-                wingsSpan, 0, 0,
-                0, 0, - 15
-            );
-
-        }
-
-        for (let v = 0; v < triangles * 3; v++) {
-
-            const triangleIndex = ~ ~(v / 3);
-            const birdIndex = ~ ~(triangleIndex / trianglesPerBird);
-            const x = (birdIndex % WIDTH) / WIDTH;
-            const y = ~ ~(birdIndex / WIDTH) / WIDTH;
-
-            const c = new Color(
-                0x444444 +
-                ~ ~(v / 9) / BIRDS * 0x666666
-            );
-
-            birdColors.array[v * 3 + 0] = c.r;
-            birdColors.array[v * 3 + 1] = c.g;
-            birdColors.array[v * 3 + 2] = c.b;
-
-            references.array[v * 2] = x;
-            references.array[v * 2 + 1] = y;
-
-            birdVertex.array[v] = v % 9;
-
-        }
-
-        this.scale(0.2, 0.2, 0.2);
-
+    function verts_push(
+      a: number,
+      b: number,
+      c: number,
+      d: number,
+      e: number,
+      f: number,
+      g: number,
+      h: number,
+      j: number
+    ) {
+      for (let i = 0; i < arguments.length; i++) {
+        vertices.array[v++] = arguments[i];
+      }
     }
 
+    const wingsSpan = 20;
+
+    for (let f = 0; f < BIRDS; f++) {
+      // Body
+
+      verts_push(0, -0, -20, 0, 4, -20, 0, 0, 30);
+
+      // Wings
+
+      verts_push(0, 0, -15, -wingsSpan, 0, 0, 0, 0, 15);
+
+      verts_push(0, 0, 15, wingsSpan, 0, 0, 0, 0, -15);
+    }
+
+    for (let v = 0; v < triangles * 3; v++) {
+      const triangleIndex = ~~(v / 3);
+      const birdIndex = ~~(triangleIndex / trianglesPerBird);
+      const x = (birdIndex % WIDTH) / WIDTH;
+      const y = ~~(birdIndex / WIDTH) / WIDTH;
+
+      const c = new Color(0x444444 + (~~(v / 9) / BIRDS) * 0x666666);
+
+      birdColors.array[v * 3 + 0] = c.r;
+      birdColors.array[v * 3 + 1] = c.g;
+      birdColors.array[v * 3 + 2] = c.b;
+
+      references.array[v * 2] = x;
+      references.array[v * 2 + 1] = y;
+
+      birdVertex.array[v] = v % 9;
+    }
+
+    this.scale(0.2, 0.2, 0.2);
+  }
 }
 
 //
 
 let container, stats: any;
 let camera: any, scene: any, renderer: any;
-let mouseX = 0, mouseY = 0;
+let mouseX = 0,
+  mouseY = 0;
 
 let windowHalfX = window.innerWidth / 2;
 let windowHalfY = window.innerHeight / 2;
 
-const BOUNDS = 800, BOUNDS_HALF = BOUNDS / 2;
+const BOUNDS = 800,
+  BOUNDS_HALF = BOUNDS / 2;
 
 let last = performance.now();
 
@@ -145,258 +129,259 @@ let velocityUniforms: any;
 let birdUniforms: any;
 
 onMounted(async () => {
-    init();
-    animate();
-    console.log('backgroundLogin初始化')
-})
+  init();
+  animate();
+  console.log("backgroundLogin初始化");
+});
 
 function init() {
+  container = document.createElement("div");
+  document.querySelector("#backgroundLogin").appendChild(container);
 
-    container = document.createElement('div');
-    document.querySelector('#backgroundLogin').appendChild(container);
+  camera = new PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    1,
+    3000
+  );
+  camera.position.z = 350;
 
-    camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 3000);
-    camera.position.z = 350;
+  scene = new Scene();
+  scene.background = new Color(0xffffff);
+  scene.fog = new Fog(0xffffff, 100, 1000);
 
-    scene = new Scene();
-    scene.background = new Color(0xffffff);
-    scene.fog = new Fog(0xffffff, 100, 1000);
+  renderer = new WebGLRenderer();
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  container.appendChild(renderer.domElement);
 
-    renderer = new WebGLRenderer();
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    container.appendChild(renderer.domElement);
+  initComputeRenderer();
 
-    initComputeRenderer();
+  stats = new Stats();
+  container.appendChild(stats.dom);
 
-    stats = new Stats();
-    container.appendChild(stats.dom);
+  container.style.touchAction = "none";
+  container.addEventListener("pointermove", onPointerMove);
 
-    container.style.touchAction = 'none';
-    container.addEventListener('pointermove', onPointerMove);
+  //
 
-    //
+  window.addEventListener("resize", onWindowResize);
 
-    window.addEventListener('resize', onWindowResize);
+  const gui = new GUI();
 
-    const gui = new GUI();
+  const effectController = {
+    separation: 20.0,
+    alignment: 20.0,
+    cohesion: 20.0,
+    freedom: 0.75,
+  };
 
+  const valuesChanger = function () {
+    velocityUniforms["separationDistance"].value = effectController.separation;
+    velocityUniforms["alignmentDistance"].value = effectController.alignment;
+    velocityUniforms["cohesionDistance"].value = effectController.cohesion;
+    velocityUniforms["freedomFactor"].value = effectController.freedom;
+  };
 
-    const effectController = {
-        separation: 20.0,
-        alignment: 20.0,
-        cohesion: 20.0,
-        freedom: 0.75
-    };
+  valuesChanger();
 
-    const valuesChanger = function () {
+  gui
+    .add(effectController, "separation", 0.0, 100.0, 1.0)
+    .onChange(valuesChanger);
+  gui
+    .add(effectController, "alignment", 0.0, 100, 0.001)
+    .onChange(valuesChanger);
+  gui
+    .add(effectController, "cohesion", 0.0, 100, 0.025)
+    .onChange(valuesChanger);
+  gui.close();
 
-        velocityUniforms['separationDistance'].value = effectController.separation;
-        velocityUniforms['alignmentDistance'].value = effectController.alignment;
-        velocityUniforms['cohesionDistance'].value = effectController.cohesion;
-        velocityUniforms['freedomFactor'].value = effectController.freedom;
-
-    };
-
-    valuesChanger();
-
-    gui.add(effectController, 'separation', 0.0, 100.0, 1.0).onChange(valuesChanger);
-    gui.add(effectController, 'alignment', 0.0, 100, 0.001).onChange(valuesChanger);
-    gui.add(effectController, 'cohesion', 0.0, 100, 0.025).onChange(valuesChanger);
-    gui.close();
-
-    initBirds();
-
+  initBirds();
 }
 
 function initComputeRenderer() {
+  gpuCompute = new GPUComputationRenderer(WIDTH, WIDTH, renderer);
 
-    gpuCompute = new GPUComputationRenderer(WIDTH, WIDTH, renderer);
+  if (renderer.capabilities.isWebGL2 === false) {
+    gpuCompute.setDataType(HalfFloatType);
+  }
 
-    if (renderer.capabilities.isWebGL2 === false) {
+  const dtPosition = gpuCompute.createTexture();
+  const dtVelocity = gpuCompute.createTexture();
+  fillPositionTexture(dtPosition);
+  fillVelocityTexture(dtVelocity);
 
-        gpuCompute.setDataType(HalfFloatType);
+  velocityVariable = gpuCompute.addVariable(
+    "textureVelocity",
+    document.getElementById("fragmentShaderVelocity").textContent,
+    dtVelocity
+  );
+  positionVariable = gpuCompute.addVariable(
+    "texturePosition",
+    document.getElementById("fragmentShaderPosition").textContent,
+    dtPosition
+  );
 
-    }
+  gpuCompute.setVariableDependencies(velocityVariable, [
+    positionVariable,
+    velocityVariable,
+  ]);
+  gpuCompute.setVariableDependencies(positionVariable, [
+    positionVariable,
+    velocityVariable,
+  ]);
 
-    const dtPosition = gpuCompute.createTexture();
-    const dtVelocity = gpuCompute.createTexture();
-    fillPositionTexture(dtPosition);
-    fillVelocityTexture(dtVelocity);
+  positionUniforms = positionVariable.material.uniforms;
+  velocityUniforms = velocityVariable.material.uniforms;
 
-    velocityVariable = gpuCompute.addVariable('textureVelocity', document.getElementById('fragmentShaderVelocity').textContent, dtVelocity);
-    positionVariable = gpuCompute.addVariable('texturePosition', document.getElementById('fragmentShaderPosition').textContent, dtPosition);
+  positionUniforms["time"] = { value: 0.0 };
+  positionUniforms["delta"] = { value: 0.0 };
+  velocityUniforms["time"] = { value: 1.0 };
+  velocityUniforms["delta"] = { value: 0.0 };
+  velocityUniforms["testing"] = { value: 1.0 };
+  velocityUniforms["separationDistance"] = { value: 1.0 };
+  velocityUniforms["alignmentDistance"] = { value: 1.0 };
+  velocityUniforms["cohesionDistance"] = { value: 1.0 };
+  velocityUniforms["freedomFactor"] = { value: 1.0 };
+  velocityUniforms["predator"] = { value: new Vector3() };
+  velocityVariable.material.defines.BOUNDS = BOUNDS.toFixed(2);
 
-    gpuCompute.setVariableDependencies(velocityVariable, [positionVariable, velocityVariable]);
-    gpuCompute.setVariableDependencies(positionVariable, [positionVariable, velocityVariable]);
+  velocityVariable.wrapS = RepeatWrapping;
+  velocityVariable.wrapT = RepeatWrapping;
+  positionVariable.wrapS = RepeatWrapping;
+  positionVariable.wrapT = RepeatWrapping;
 
-    positionUniforms = positionVariable.material.uniforms;
-    velocityUniforms = velocityVariable.material.uniforms;
+  const error = gpuCompute.init();
 
-    positionUniforms['time'] = { value: 0.0 };
-    positionUniforms['delta'] = { value: 0.0 };
-    velocityUniforms['time'] = { value: 1.0 };
-    velocityUniforms['delta'] = { value: 0.0 };
-    velocityUniforms['testing'] = { value: 1.0 };
-    velocityUniforms['separationDistance'] = { value: 1.0 };
-    velocityUniforms['alignmentDistance'] = { value: 1.0 };
-    velocityUniforms['cohesionDistance'] = { value: 1.0 };
-    velocityUniforms['freedomFactor'] = { value: 1.0 };
-    velocityUniforms['predator'] = { value: new Vector3() };
-    velocityVariable.material.defines.BOUNDS = BOUNDS.toFixed(2);
-
-    velocityVariable.wrapS = RepeatWrapping;
-    velocityVariable.wrapT = RepeatWrapping;
-    positionVariable.wrapS = RepeatWrapping;
-    positionVariable.wrapT = RepeatWrapping;
-
-    const error = gpuCompute.init();
-
-    if (error !== null) {
-
-        console.error(error);
-
-    }
-
+  if (error !== null) {
+    console.error(error);
+  }
 }
 
 function initBirds() {
+  const geometry = new BirdGeometry();
 
-    const geometry = new BirdGeometry();
+  // For Vertex and Fragment
+  birdUniforms = {
+    color: { value: new Color(0xff2200) },
+    texturePosition: { value: null },
+    textureVelocity: { value: null },
+    time: { value: 1.0 },
+    delta: { value: 0.0 },
+  };
 
-    // For Vertex and Fragment
-    birdUniforms = {
-        'color': { value: new Color(0xff2200) },
-        'texturePosition': { value: null },
-        'textureVelocity': { value: null },
-        'time': { value: 1.0 },
-        'delta': { value: 0.0 }
-    };
+  // THREE.ShaderMaterial
+  const material = new ShaderMaterial({
+    uniforms: birdUniforms,
+    vertexShader: document.getElementById("birdVS").textContent,
+    fragmentShader: document.getElementById("birdFS").textContent,
+    side: DoubleSide,
+  });
 
-    // THREE.ShaderMaterial
-    const material = new ShaderMaterial({
-        uniforms: birdUniforms,
-        vertexShader: document.getElementById('birdVS').textContent,
-        fragmentShader: document.getElementById('birdFS').textContent,
-        side: DoubleSide
+  const birdMesh = new Mesh(geometry, material);
+  birdMesh.rotation.y = Math.PI / 2;
+  birdMesh.matrixAutoUpdate = false;
+  birdMesh.updateMatrix();
 
-    });
-
-    const birdMesh = new Mesh(geometry, material);
-    birdMesh.rotation.y = Math.PI / 2;
-    birdMesh.matrixAutoUpdate = false;
-    birdMesh.updateMatrix();
-
-    scene.add(birdMesh);
-
+  scene.add(birdMesh);
 }
 
 function fillPositionTexture(texture: any) {
+  const theArray = texture.image.data;
 
-    const theArray = texture.image.data;
+  for (let k = 0, kl = theArray.length; k < kl; k += 4) {
+    const x = Math.random() * BOUNDS - BOUNDS_HALF;
+    const y = Math.random() * BOUNDS - BOUNDS_HALF;
+    const z = Math.random() * BOUNDS - BOUNDS_HALF;
 
-    for (let k = 0, kl = theArray.length; k < kl; k += 4) {
-
-        const x = Math.random() * BOUNDS - BOUNDS_HALF;
-        const y = Math.random() * BOUNDS - BOUNDS_HALF;
-        const z = Math.random() * BOUNDS - BOUNDS_HALF;
-
-        theArray[k + 0] = x;
-        theArray[k + 1] = y;
-        theArray[k + 2] = z;
-        theArray[k + 3] = 1;
-
-    }
-
+    theArray[k + 0] = x;
+    theArray[k + 1] = y;
+    theArray[k + 2] = z;
+    theArray[k + 3] = 1;
+  }
 }
 
 function fillVelocityTexture(texture: any) {
+  const theArray = texture.image.data;
 
-    const theArray = texture.image.data;
+  for (let k = 0, kl = theArray.length; k < kl; k += 4) {
+    const x = Math.random() - 0.5;
+    const y = Math.random() - 0.5;
+    const z = Math.random() - 0.5;
 
-    for (let k = 0, kl = theArray.length; k < kl; k += 4) {
-
-        const x = Math.random() - 0.5;
-        const y = Math.random() - 0.5;
-        const z = Math.random() - 0.5;
-
-        theArray[k + 0] = x * 10;
-        theArray[k + 1] = y * 10;
-        theArray[k + 2] = z * 10;
-        theArray[k + 3] = 1;
-
-    }
-
+    theArray[k + 0] = x * 10;
+    theArray[k + 1] = y * 10;
+    theArray[k + 2] = z * 10;
+    theArray[k + 3] = 1;
+  }
 }
 
 function onWindowResize() {
+  windowHalfX = window.innerWidth / 2;
+  windowHalfY = window.innerHeight / 2;
 
-    windowHalfX = window.innerWidth / 2;
-    windowHalfY = window.innerHeight / 2;
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
 
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-
-    renderer.setSize(window.innerWidth, window.innerHeight);
-
+  renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 function onPointerMove(event: any) {
+  if (event.isPrimary === false) return;
 
-    if (event.isPrimary === false) return;
-
-    mouseX = event.clientX - windowHalfX;
-    mouseY = event.clientY - windowHalfY;
-
+  mouseX = event.clientX - windowHalfX;
+  mouseY = event.clientY - windowHalfY;
 }
 
 //
 
 function animate() {
+  requestAnimationFrame(animate);
 
-    requestAnimationFrame(animate);
-
-    render();
-    stats.update();
-
+  render();
+  stats.update();
 }
 
 function render() {
+  const now = performance.now();
+  let delta = (now - last) / 1000;
 
-    const now = performance.now();
-    let delta = (now - last) / 1000;
+  if (delta > 1) delta = 1; // safety cap on large deltas
+  last = now;
 
-    if (delta > 1) delta = 1; // safety cap on large deltas
-    last = now;
+  positionUniforms["time"].value = now;
+  positionUniforms["delta"].value = delta;
+  velocityUniforms["time"].value = now;
+  velocityUniforms["delta"].value = delta;
+  birdUniforms["time"].value = now;
+  birdUniforms["delta"].value = delta;
 
-    positionUniforms['time'].value = now;
-    positionUniforms['delta'].value = delta;
-    velocityUniforms['time'].value = now;
-    velocityUniforms['delta'].value = delta;
-    birdUniforms['time'].value = now;
-    birdUniforms['delta'].value = delta;
+  velocityUniforms["predator"].value.set(
+    (0.5 * mouseX) / windowHalfX,
+    (-0.5 * mouseY) / windowHalfY,
+    0
+  );
 
-    velocityUniforms['predator'].value.set(0.5 * mouseX / windowHalfX, - 0.5 * mouseY / windowHalfY, 0);
+  mouseX = 10000;
+  mouseY = 10000;
 
-    mouseX = 10000;
-    mouseY = 10000;
+  gpuCompute.compute();
 
-    gpuCompute.compute();
+  birdUniforms["texturePosition"].value =
+    gpuCompute.getCurrentRenderTarget(positionVariable).texture;
+  birdUniforms["textureVelocity"].value =
+    gpuCompute.getCurrentRenderTarget(velocityVariable).texture;
 
-    birdUniforms['texturePosition'].value = gpuCompute.getCurrentRenderTarget(positionVariable).texture;
-    birdUniforms['textureVelocity'].value = gpuCompute.getCurrentRenderTarget(velocityVariable).texture;
-
-    renderer.render(scene, camera);
-
+  renderer.render(scene, camera);
 }
 </script>
 
 <style lang="scss" scoped>
-    #backgroundLogin {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
+#backgroundLogin {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
 </style>

@@ -128,8 +128,8 @@ let themeStyle = () => {
         dark,
         light
     }
-    // themes[store.themeMD].backgroundImage = "url('img/userMainBG1.JPG')"
-    return themes[store.themeMD]
+    // themes[store.theme].backgroundImage = "url('img/userMainBG1.JPG')"
+    return themes[store.theme]
 }
 let message = proxy.$message;
 let headPortrait = ref()
